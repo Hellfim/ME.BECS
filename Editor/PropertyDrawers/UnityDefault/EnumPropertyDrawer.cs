@@ -7,7 +7,7 @@ namespace ME.BECS.Editor {
     using UnityEngine.UIElements;
 
     /*
-     * Usage: in order to correctly display YOUR_ENUM in List/MemArrays
+     * Usage: in order to correctly display YOUR_ENUM in BECS collections
      * Implement following class in your project:
      * 
      * [CustomPropertyDrawer(typeof(YOUR_ENUM))]
