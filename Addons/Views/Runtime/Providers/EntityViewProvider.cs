@@ -486,6 +486,7 @@ namespace ME.BECS.Views {
                 info = new SceneInstanceInfo(objPtr, prefabInfo, customViewId);
             }
 
+            objInstance.groupChangedTracker = new GroupChangedTracker();
             objInstance.groupChangedTracker.Initialize(in prefabInfo.ptr->typeInfo.tracker);
             if (prefabInfo.ptr->HasApplyStateModules == true) this.applyStateModules.Register(objInstance, objInstance.applyStateModules);
             if (prefabInfo.ptr->HasApplyStateParallelModules == true) this.applyStateParallelModules.Register(objInstance, objInstance.applyStateParallelModules);
