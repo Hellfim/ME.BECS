@@ -1393,7 +1393,7 @@ namespace ME.BECS.Network {
 
         }
 
-        public bool DeserializeAllEvents(ref StreamBufferReader reader, bool cleanOld = false, bool throwIfExist = true, bool throwFurther = true) {
+        public bool DeserializeAllEvents(ref StreamBufferReader reader, bool updateServerTime = true, bool cleanOld = false, bool throwIfExist = true, bool throwFurther = true) {
 
             try {
                 uint count = 0u;
@@ -1416,8 +1416,11 @@ namespace ME.BECS.Network {
                     this.data.ptr->eventsStorage.Add(package, package.tick, throwIfExist: throwIfExist);
                 }
 
-                this.SetServerStartTime(startTick * this.properties.tickTime, in this.data.ptr->connectedWorld);
-                this.SetServerTime(startTick * this.properties.tickTime);
+                if (updateServerTime == true) {
+                    this.SetServerStartTime(startTick * this.properties.tickTime, in this.data.ptr->connectedWorld);
+                    this.SetServerTime(startTick * this.properties.tickTime);
+                }
+
             } catch (System.Exception ex) {
                 if (throwFurther == true) throw;
                 UnityEngine.Debug.LogException(ex);
@@ -1427,10 +1430,10 @@ namespace ME.BECS.Network {
 
         }
 
-        public bool DeserializeAllEvents(byte[] bytes, bool cleanOld = false, bool throwIfExist = true) {
+        public bool DeserializeAllEvents(byte[] bytes, bool updateServerTime = true, bool cleanOld = false, bool throwIfExist = true) {
             try {
                 var reader = new StreamBufferReader(bytes);
-                return this.DeserializeAllEvents(ref reader, cleanOld, throwIfExist, throwFurther: true);
+                return this.DeserializeAllEvents(ref reader, updateServerTime, cleanOld, throwIfExist, throwFurther: true);
             } catch (System.Exception ex) {
                 UnityEngine.Debug.LogException(ex);
                 return false;
