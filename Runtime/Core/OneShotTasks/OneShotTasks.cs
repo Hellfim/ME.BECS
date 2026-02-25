@@ -15,7 +15,7 @@ namespace ME.BECS {
     public unsafe partial struct OneShotTasks {
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct ThreadItem {
+        public struct ThreadItem {
 
             [StructLayout(LayoutKind.Sequential)]
             public struct TaskCollection {
@@ -30,7 +30,7 @@ namespace ME.BECS {
 
         }
         
-        private MemArrayThreadCacheLine<ThreadItem> threadItems;
+        public MemArrayThreadCacheLine<ThreadItem> threadItems;
 
         [INLINE(256)][NotThreadSafe][IgnoreProfiler]
         public static OneShotTasks Create(safe_ptr<State> state, uint capacity) {
