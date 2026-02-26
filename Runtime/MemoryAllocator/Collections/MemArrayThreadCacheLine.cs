@@ -26,7 +26,7 @@ namespace ME.BECS {
     #endif
     public unsafe struct MemArrayThreadCacheLine<T> : IIsCreated where T : unmanaged {
 
-        private static readonly uint CACHE_LINE_SIZE = _align(TSize<T>.size, JobUtils.CacheLineSize);
+        private static readonly uint CACHE_LINE_SIZE = _align(TSize<T>.size, JobUtils.CacheLineSizeFixed);
 
         private readonly MemPtr arrPtr;
         public readonly uint Length => JobUtils.ThreadsCountFixed;
