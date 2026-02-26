@@ -409,7 +409,7 @@ namespace ME.BECS {
             #else
             var handle = JobHandle.CombineDependencies(handle1, handle2, handle3);
             #endif
-            state.ptr->lastApplyHandle = JobHandle.CombineDependencies(state.ptr->lastApplyHandle, handle);
+            HandleStorage.lastApplyHandleBurst.Data = JobHandle.CombineDependencies(HandleStorage.lastApplyHandleBurst.Data, handle);
             return handle;
         }
 
@@ -417,7 +417,7 @@ namespace ME.BECS {
         public static JobHandle Apply(JobHandle jobHandle, in World world) {
             #if ENABLE_BECS_FLAT_QUERIES
             var state = world.state;
-            state.ptr->lastApplyHandle = JobHandle.CombineDependencies(state.ptr->lastApplyHandle, jobHandle);
+            HandleStorage.lastApplyHandleBurst.Data = JobHandle.CombineDependencies(HandleStorage.lastApplyHandleBurst.Data, jobHandle);
             return jobHandle;
             #else
             return Apply(jobHandle, world.id, world.state);
@@ -500,7 +500,7 @@ namespace ME.BECS {
             var worldId = ent.worldId;
             ref var batches = ref WorldBatches.storage.Data.Get(worldId);
             batches.lockReadWrite.ReadBegin();
-            ref var threadItem = ref batches.items[(uint)JobsUtility.ThreadIndex];
+            ref var threadItem = ref batches.items[(uint)JobUtils.ThreadIndex];
             threadItem.lockSpinner.Lock();
             {
                 ref var item = ref batches.GetBatchItem(ent.id);
@@ -540,7 +540,7 @@ namespace ME.BECS {
             var worldId = ent.worldId;
             ref var batches = ref WorldBatches.storage.Data.Get(worldId);
             batches.lockReadWrite.ReadBegin();
-            ref var threadItem = ref batches.items[(uint)JobsUtility.ThreadIndex];
+            ref var threadItem = ref batches.items[(uint)JobUtils.ThreadIndex];
             threadItem.lockSpinner.Lock();
             {
                 ref var item = ref batches.GetBatchItem(ent.id);

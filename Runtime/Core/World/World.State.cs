@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Unity.Jobs;
 
 namespace ME.BECS {
@@ -16,6 +17,7 @@ namespace ME.BECS {
     [Unity.IL2CPP.CompilerServices.Il2CppSetOption(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false)]
     [Unity.IL2CPP.CompilerServices.Il2CppSetOption(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
     #endif
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public unsafe struct State {
 
         public MemoryAllocator allocator;
@@ -33,7 +35,6 @@ namespace ME.BECS {
         public byte state;
         public byte tickCheck;
         public ushort updateType;
-        public JobHandle lastApplyHandle;
         public uint seed;
 
         public WorldState WorldState {
@@ -174,7 +175,6 @@ namespace ME.BECS {
                 updateType = updateType,
                 deltaTimeMs = deltaTimeMs,
             }.ScheduleSingle(dependsOn);
-            world.state.ptr->lastApplyHandle = dependsOn;
             return dependsOn;
         }
 
@@ -201,12 +201,12 @@ namespace ME.BECS {
         public void CopyFrom(in State other) {
 
             var alloc = this.allocator;
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS && ENABLE_BECS_COLLECTIONS_CHECKS
             var safetyHandlers = this.components.handlers;
             var safetyHandlersLock = this.components.handlersLock;
             #endif
             this = other;
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS && ENABLE_BECS_COLLECTIONS_CHECKS
             this.components.handlers = safetyHandlers;
             this.components.handlersLock = safetyHandlersLock;
             this.components.SafetyHandlersCopyFrom(in other.components);
@@ -220,12 +220,12 @@ namespace ME.BECS {
         public void CopyFromPrepare(in State other) {
 
             var alloc = this.allocator;
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS && ENABLE_BECS_COLLECTIONS_CHECKS
             var safetyHandlers = this.components.handlers;
             var safetyHandlersLock = this.components.handlersLock;
             #endif
             this = other;
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS && ENABLE_BECS_COLLECTIONS_CHECKS
             this.components.handlers = safetyHandlers;
             this.components.handlersLock = safetyHandlersLock;
             this.components.SafetyHandlersCopyFrom(in other.components);
@@ -245,7 +245,7 @@ namespace ME.BECS {
         [INLINE(256)]
         public void Dispose() {
 
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS && ENABLE_BECS_COLLECTIONS_CHECKS
             this.components.DisposeSafetyHandlers();
             #endif
             this.allocator.Dispose();

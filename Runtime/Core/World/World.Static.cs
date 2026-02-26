@@ -343,6 +343,13 @@ namespace ME.BECS {
 
     }
 
+    public struct HandleStorage {
+
+        internal static readonly Unity.Burst.SharedStatic<JobHandle> lastApplyHandleBurst = Unity.Burst.SharedStatic<JobHandle>.GetOrCreate<JobHandle>();
+        internal static ref JobHandle lastApplyHandle => ref lastApplyHandleBurst.Data;
+
+    }
+
     public unsafe struct Worlds {
 
         private static readonly Unity.Burst.SharedStatic<ushort> worldsCounterBurst = Unity.Burst.SharedStatic<ushort>.GetOrCreate<Worlds>();

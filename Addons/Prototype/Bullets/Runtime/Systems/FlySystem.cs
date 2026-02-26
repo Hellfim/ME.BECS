@@ -22,12 +22,12 @@ namespace ME.BECS.Bullets {
     [UnityEngine.Tooltip("Bullet fly system")]
     public struct FlySystem : IUpdate {
         
-        public bool continuousTargetCheck;
+        public bbool continuousTargetCheck;
         
         [BURST]
         public struct FlyJob : IJobForAspects<BulletAspect, TransformAspect> {
             
-            public bool continuousTargetCheck;
+            public bbool continuousTargetCheck;
             public QuadTreeInsertSystem qt;
             public tfloat dt;
             
@@ -69,7 +69,7 @@ namespace ME.BECS.Bullets {
         [BURST]
         public struct FlySpatialJob : IJobForAspects<BulletAspect, TransformAspect> {
             
-            public bool continuousTargetCheck;
+            public bbool continuousTargetCheck;
             public SpatialInsertSystem qt;
             public tfloat dt;
             

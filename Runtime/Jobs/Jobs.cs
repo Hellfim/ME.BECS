@@ -275,6 +275,7 @@ namespace ME.BECS {
         public const uint CacheLineSize = 64u;
         public static uint ThreadsCount => (uint)JobsUtility.ThreadIndexCount;
         public static uint ThreadsCountFixed => 8u;
+        public static uint ThreadIndex => (uint)JobsUtility.ThreadIndex % JobUtils.ThreadsCountFixed;
 
         public static void Initialize() {
             CleanUp();
