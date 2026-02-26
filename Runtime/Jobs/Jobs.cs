@@ -269,25 +269,17 @@ namespace ME.BECS {
         
     }
 
-    public struct JobsCount {
-
-        public static readonly Unity.Burst.SharedStatic<uint> jobsCountBurst = Unity.Burst.SharedStatic<uint>.GetOrCreate<JobsCount>();
-        public static ref uint value => ref jobsCountBurst.Data;
-        
-    }
-
     [IgnoreProfiler]
     public static unsafe class JobUtils {
 
         public const uint CacheLineSize = JobsUtility.CacheLineSize;
         public static uint ThreadsCount => (uint)JobsUtility.ThreadIndexCount;
-        public static uint ThreadsCountMax => JobsCount.value;
+        public static uint ThreadsCountMax => 128u;
         public const uint CacheLineSizeFixed = 64u;
         public static uint ThreadIndex => (uint)JobsUtility.ThreadIndex;
 
         public static void Initialize() {
             CleanUp();
-            JobsCount.value = (uint)JobsUtility.JobWorkerMaximumCount;
             JobSingleThread.singleThreads.Initialize();
         }
 
