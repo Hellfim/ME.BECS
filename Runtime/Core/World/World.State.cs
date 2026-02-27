@@ -18,24 +18,7 @@ namespace ME.BECS {
     [Unity.IL2CPP.CompilerServices.Il2CppSetOption(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
     #endif
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    public unsafe struct State {
-
-        public MemoryAllocator allocator;
-        public Ents entities;
-        public OneShotTasks oneShotTasks;
-        public Components components;
-        #if !ENABLE_BECS_FLAT_QUERIES
-        public Archetypes archetypes;
-        public Queries queries;
-        #endif
-        public RandomData random;
-        public CollectionsRegistry collectionsRegistry;
-        public AutoDestroyRegistry autoDestroyRegistry;
-        public ulong tick;
-        public byte state;
-        public byte tickCheck;
-        public ushort updateType;
-        public uint seed;
+    public unsafe partial struct State {
 
         public WorldState WorldState {
             get {

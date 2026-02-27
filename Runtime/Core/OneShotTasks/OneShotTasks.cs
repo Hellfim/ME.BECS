@@ -32,6 +32,16 @@ namespace ME.BECS {
         
         private MemArrayThreadCacheLine<ThreadItem> threadItems;
 
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.threadItems);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.threadItems);
+        }
+
         [INLINE(256)][NotThreadSafe][IgnoreProfiler]
         public static OneShotTasks Create(safe_ptr<State> state, uint capacity) {
             var tasks = new OneShotTasks() {

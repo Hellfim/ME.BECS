@@ -7,8 +7,8 @@ namespace ME.BECS {
         #if ENABLE_BECS_FLAT_QUERIES
         public struct LockedEntityToComponent {
 
-            public HashSet<uint> entities;
             public LockSpinner lockSpinner;
+            public HashSet<uint> entities;
             
             public LockedEntityToComponent(ref MemoryAllocator allocator, uint capacity) {
                 this.lockSpinner = default;
@@ -34,6 +34,20 @@ namespace ME.BECS {
             list.lockSpinner.Unlock();
         }
         #endif
+
+        [INLINE(256)]
+        public void SerializeHeadersFlatQueries(ref StreamBufferWriter writer) {
+            #if ENABLE_BECS_FLAT_QUERIES
+            writer.Write(this.entityToComponents);
+            #endif
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeadersFlatQueries(ref StreamBufferReader reader) {
+            #if ENABLE_BECS_FLAT_QUERIES
+            reader.Read(ref this.entityToComponents);
+            #endif
+        }
 
     }
 

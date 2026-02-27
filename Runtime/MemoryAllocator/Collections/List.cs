@@ -39,6 +39,18 @@ namespace ME.BECS {
         private MemArray<T> arr;
         public uint Count;
 
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.arr);
+            writer.Write(this.Count);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.arr);
+            reader.Read(ref this.Count);
+        }
+
         public readonly bool IsCreated {
             [INLINE(256)]
             get => this.arr.IsCreated;

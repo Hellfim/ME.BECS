@@ -28,8 +28,18 @@ namespace ME.BECS {
 
         private static readonly uint CACHE_LINE_SIZE = _align(TSize<T>.size, JobUtils.CacheLineSizeFixed);
 
-        private readonly MemPtr arrPtr;
+        private MemPtr arrPtr;
         public readonly uint Length => JobUtils.ThreadsCountMax;
+
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.arrPtr);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.arrPtr);
+        }
 
         public readonly bool IsCreated {
             [INLINE(256)]

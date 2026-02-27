@@ -24,14 +24,49 @@ namespace ME.BECS {
         public ReadWriteSpinner readWriteSpinner;
         public LockSpinner popLock;
         public LockSpinner destroyedLock;
+        private uint entitiesCount;
+        private uint aliveCount;
+        
         public uint Capacity => this.generations.Length;
         public uint FreeCount => this.free.Count;
         public uint EntitiesCount => this.aliveCount;
-
-        private uint entitiesCount;
-        private uint aliveCount;
-
         public int Hash => Utils.Hash(this.FreeCount, this.EntitiesCount);
+
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.generations);
+            writer.Write(this.versions);
+            writer.Write(this.seeds);
+            writer.Write(this.versionsGroup);
+            writer.Write(this.aliveBits);
+            writer.Write(this.free);
+            writer.Write(this.destroyed);
+            writer.Write(this.locksPerEntity);
+            writer.Write(this.readWriteSpinner);
+            writer.Write(this.popLock);
+            writer.Write(this.destroyedLock);
+            writer.Write(this.entitiesCount);
+            writer.Write(this.aliveCount);
+            this.SerializeHeadersFlatQueries(ref writer);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.generations);
+            reader.Read(ref this.versions);
+            reader.Read(ref this.seeds);
+            reader.Read(ref this.versionsGroup);
+            reader.Read(ref this.aliveBits);
+            reader.Read(ref this.free);
+            reader.Read(ref this.destroyed);
+            reader.Read(ref this.locksPerEntity);
+            reader.Read(ref this.readWriteSpinner);
+            reader.Read(ref this.popLock);
+            reader.Read(ref this.destroyedLock);
+            reader.Read(ref this.entitiesCount);
+            reader.Read(ref this.aliveCount);
+            this.DeserializeHeadersFlatQueries(ref reader);
+        }
 
         [INLINE(256)]
         public static void Lock(safe_ptr<State> state, in Ent ent) {

@@ -75,15 +75,6 @@ namespace ME.BECS {
         public static ref ME.BECS.Internal.Array<uint> tracker => ref trackerBurst.Data;
 
         public static void Dispose() {
-            if (StaticTypes.sizes.IsCreated == true) StaticTypes.sizes.Dispose();
-            if (StaticTypes.groups.IsCreated == true) StaticTypes.groups.Dispose();
-            if (StaticTypes.sharedTypeId.IsCreated == true) StaticTypes.sharedTypeId.Dispose();
-            if (StaticTypes.staticTypeId.IsCreated == true) StaticTypes.staticTypeId.Dispose();
-            if (StaticTypes.defaultValues.IsCreated == true) StaticTypes.defaultValues.Dispose();
-            if (StaticTypes.collectionsCount.IsCreated == true) StaticTypes.collectionsCount.Dispose();
-            if (StaticTypes.tracker.IsCreated == true) StaticTypes.tracker.Dispose();
-            if (StaticTypesDestroyRegistry.registry.Data.IsCreated == true) StaticTypesDestroyRegistry.registry.Data.Dispose();
-            if (StaticTypesAutoDestroy.registry.Data.IsCreated == true) StaticTypesAutoDestroy.registry.Data.Dispose();
         }
         
         public static void SetTracker(uint count) {

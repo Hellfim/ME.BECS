@@ -34,8 +34,22 @@ namespace ME.BECS {
         public delegate void DestroyDelegate(in Ent ent, byte* comp);
 
         private MemArray<List<uint>> list;
-        private MemArray<LockSpinner> readWriteSpinnerPerEntity;
         private ReadWriteSpinner readWriteSpinner;
+        private MemArray<LockSpinner> readWriteSpinnerPerEntity;
+
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.list);
+            writer.Write(this.readWriteSpinner);
+            writer.Write(this.readWriteSpinnerPerEntity);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.list);
+            reader.Read(ref this.readWriteSpinner);
+            reader.Read(ref this.readWriteSpinnerPerEntity);
+        }
 
         [INLINE(256)]
         public static AutoDestroyRegistry Create(safe_ptr<State> state, uint capacity) {

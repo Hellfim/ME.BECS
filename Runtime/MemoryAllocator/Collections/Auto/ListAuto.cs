@@ -45,6 +45,18 @@ namespace ME.BECS {
         internal MemArrayAuto<T> arr;
         public uint Count;
 
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.arr);
+            writer.Write(this.Count);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.arr);
+            reader.Read(ref this.Count);
+        }
+
         public uint GetConfigId() => this.Count;
 
         public readonly Ent ent => this.arr.ent;

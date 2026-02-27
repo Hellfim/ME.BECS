@@ -135,9 +135,18 @@ namespace ME.BECS {
         private static readonly uint CACHE_LINE_SIZE = _align(TSize<int>.size, JobUtils.CacheLineSize);
         private MemPtr value;
         private int writeValue;
-        #if USE_CACHE_PTR
-        private int* ptr;
-        #endif
+
+        [INLINE(256)]
+        public void SerializeHeaders(ref StreamBufferWriter writer) {
+            writer.Write(this.value);
+            writer.Write(this.writeValue);
+        }
+
+        [INLINE(256)]
+        public void DeserializeHeaders(ref StreamBufferReader reader) {
+            reader.Read(ref this.value);
+            reader.Read(ref this.writeValue);
+        }
 
         public bool IsCreated => this.value.IsValid();
 
@@ -148,9 +157,6 @@ namespace ME.BECS {
             state.ptr->allocator.MemClear(arr, 0L, size);
             return new ReadWriteSpinner() {
                 value = arr,
-                #if USE_CACHE_PTR
-                ptr = (int*)ptr,
-                #endif
             };
         }
 
@@ -159,11 +165,7 @@ namespace ME.BECS {
             var cnt = 0;
             var ptr = state.ptr->allocator.GetUnsafePtr(this.value);
             for (uint i = 0u; i < JobUtils.ThreadsCount; ++i) {
-                #if USE_CACHE_PTR
-                cnt += this.ptr[i * CACHE_LINE_SIZE];
-                #else
                 cnt += *(int*)(ptr + i * CACHE_LINE_SIZE).ptr;
-                #endif
             }
             return cnt;
         }
@@ -186,22 +188,14 @@ namespace ME.BECS {
                 Unity.Burst.Intrinsics.Common.Pause();
             }
             // acquire read op
-            #if USE_CACHE_PTR
-            ++this.ptr[CACHE_LINE_SIZE * JobUtils.ThreadIndex];
-            #else
             ++*(int*)(state.ptr->allocator.GetUnsafePtr(this.value) + CACHE_LINE_SIZE * (uint)JobUtils.ThreadIndex).ptr;
-            #endif
         }
 
         [INLINE(256)]
         public void ReadEnd(safe_ptr<State> state) {
             E.IS_CREATED(this);
             // release read op
-            #if USE_CACHE_PTR
-            --this.ptr[CACHE_LINE_SIZE * JobUtils.ThreadIndex];
-            #else
             --*(int*)(state.ptr->allocator.GetUnsafePtr(this.value) + CACHE_LINE_SIZE * (uint)JobUtils.ThreadIndex).ptr;
-            #endif
         }
 
         [INLINE(256)]
@@ -260,9 +254,7 @@ namespace ME.BECS {
 
         [INLINE(256)]
         public void BurstMode(in MemoryAllocator allocator, bool value) {
-            #if USE_CACHE_PTR
-            this.ptr = (int*)allocator.GetUnsafePtr(this.value);
-            #endif
+            
         }
 
     }
@@ -339,7 +331,7 @@ namespace ME.BECS {
 
         public const int SIZE = sizeof(int);
 
-        private int value;
+        internal int value;
         public bool IsLocked => this.value != 0;
 
         [INLINE(256)]
