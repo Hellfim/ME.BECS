@@ -553,6 +553,8 @@ namespace ME.BECS.Network {
                     this.rover = 0u;
                 }
 
+                state.ptr->WorldState = WorldState.EndTick;
+
                 removedStateHash = 0;
                 removedStateTick = 0u;
                 var oldStateWasRemoved = false;
