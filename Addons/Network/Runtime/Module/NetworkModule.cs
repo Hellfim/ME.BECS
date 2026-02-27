@@ -179,6 +179,10 @@ namespace ME.BECS.Network {
             this.network.SaveResetState();
         }
 
+        public void DropResetState() {
+            this.network.DropResetState();
+        }
+
         public safe_ptr<State> GetResetState() => this.network.GetResetState();
 
         public void RegisterMethod(NetworkMethodDelegate method) {

@@ -107,7 +107,9 @@ namespace ME.BECS {
 
         }
 
-        protected virtual World CreateWorld() => World.Create(this.properties);
+        protected virtual World CreateWorld() => World.Create(this.properties, this.worldId);
+
+        protected virtual ushort worldId => 0;
         
         protected virtual void Awake() {
 

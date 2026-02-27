@@ -518,7 +518,7 @@ namespace ME.BECS.Views {
             viewsWorldProperties.name = ViewsModule.providerInfos[providerId].editorName;
             viewsWorldProperties.stateProperties.mode = WorldMode.Visual;
 
-            var viewsWorld = World.Create(viewsWorldProperties, false);
+            var viewsWorld = World.Create(viewsWorldProperties, switchContext: false);
             var prevContext = Context.world;
             Context.Switch(in viewsWorld);
             provider.Initialize(providerId, viewsWorld, properties);
