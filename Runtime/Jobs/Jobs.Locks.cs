@@ -152,7 +152,7 @@ namespace ME.BECS {
 
         [INLINE(256)]
         public static ReadWriteSpinner Create(safe_ptr<State> state) {
-            var size = CACHE_LINE_SIZE * JobUtils.ThreadsCount;
+            var size = CACHE_LINE_SIZE * JobUtils.ThreadsCountMax;
             var arr = state.ptr->allocator.Alloc(size, out var ptr);
             state.ptr->allocator.MemClear(arr, 0L, size);
             return new ReadWriteSpinner() {
@@ -164,7 +164,7 @@ namespace ME.BECS {
         private int ReadCount(safe_ptr<State> state) {
             var cnt = 0;
             var ptr = state.ptr->allocator.GetUnsafePtr(this.value);
-            for (uint i = 0u; i < JobUtils.ThreadsCount; ++i) {
+            for (uint i = 0u; i < JobUtils.ThreadsCountMax; ++i) {
                 cnt += *(int*)(ptr + i * CACHE_LINE_SIZE).ptr;
             }
             return cnt;
