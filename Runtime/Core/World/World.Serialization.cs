@@ -22,6 +22,11 @@ namespace ME.BECS {
     public static unsafe class WorldSerializationExt {
 
         [INLINE(256)]
+        public static void UpdateAfterDeserialization(this World world) {
+            WorldStaticCallbacks.RaiseCallback(ref world);
+        }
+        
+        [INLINE(256)]
         public static byte[] Serialize(this in World world) {
 
             E.IS_CREATED(world);
