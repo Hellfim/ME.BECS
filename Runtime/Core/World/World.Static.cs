@@ -124,9 +124,28 @@ namespace ME.BECS {
             [INLINE(256)]
             public void Add(ushort value) {
 
-                var node = _make(new Node() { data = value });
-                node.ptr->next = this.root;
-                this.root = node;
+                var newNode = _make(new Node() { data = value });
+                if (this.root.ptr == null) {
+                    newNode.ptr->next = default;
+                    this.root = newNode;
+                    ++this.Count;
+                    return;
+                }
+
+                if (value < this.root.ptr->data) {
+                    newNode.ptr->next = this.root;
+                    this.root = newNode;
+                    ++this.Count;
+                    return;
+                }
+
+                var current = this.root;
+                while (current.ptr->next.ptr != null && current.ptr->next.ptr->data < value) {
+                    current = current.ptr->next;
+                }
+
+                newNode.ptr->next = current.ptr->next;
+                current.ptr->next = newNode;
                 ++this.Count;
 
             }
